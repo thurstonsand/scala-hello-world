@@ -1,3 +1,5 @@
+import com.typesafe.sbt.packager.docker.DockerVersion
+
 val finchVersion = "0.31.0"
 val circeVersion = "0.11.1"
 val scalatestVersion = "3.0.7"
@@ -6,7 +8,8 @@ val paradiseVersion = "2.1.0"
 lazy val dockerSettings = Seq(
   dockerBaseImage := "adoptopenjdk/openjdk8:alpine",
   packageName in Docker := "scala-hello-world",
-  defaultLinuxInstallLocation in Docker := "/app"
+  defaultLinuxInstallLocation in Docker := "/app",
+  dockerVersion := Some(DockerVersion(19, 3, 5, None))
 )
 lazy val root = (project in file("."))
   .enablePlugins(JavaAppPackaging, AshScriptPlugin)
