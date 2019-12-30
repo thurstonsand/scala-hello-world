@@ -9,12 +9,15 @@ import com.twitter.util.Await
 import io.finch._
 import io.finch.catsEffect._
 import io.finch.circe._
-import io.circe.generic.JsonCodec
+import io.circe.{Decoder, Encoder}
+import io.circe.generic.semiauto._
 
 object Main extends App {
-
-  @JsonCodec
   case class Message(hello: String)
+  object Message {
+    implicit val decoder: Decoder[Message] = deriveDecoder
+    implicit val encoder: Encoder[Message] = deriveEncoder
+  }
 
   def healthcheck: Endpoint[IO, String] = get(pathEmpty) {
     Ok("OK")
