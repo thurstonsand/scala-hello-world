@@ -1,8 +1,10 @@
 package com.github.thurstonsand.helloworld
 
 import cats.effect.IO
-import com.twitter.finagle.{Http, Service}
-import com.twitter.finagle.http.{Request, Response}
+import com.twitter.finagle.Http
+import com.twitter.finagle.Service
+import com.twitter.finagle.http.Request
+import com.twitter.finagle.http.Response
 import com.twitter.util.Await
 import io.finch._
 import io.finch.catsEffect._
@@ -10,6 +12,7 @@ import io.finch.circe._
 import io.circe.generic.JsonCodec
 
 object Main extends App {
+
   @JsonCodec
   case class Message(hello: String)
 
@@ -25,10 +28,8 @@ object Main extends App {
     Ok(Message(s))
   }
 
-  def service: Service[Request, Response] = Bootstrap
-    .serve[Text.Plain](healthcheck)
-    .serve[Application.Json](helloWorld :+: hello)
-    .toService
+  def service: Service[Request, Response] =
+    Bootstrap.serve[Text.Plain](healthcheck).serve[Application.Json](helloWorld :+: hello).toService
 
   Await.ready(Http.server.serve(":8081", service))
 }
